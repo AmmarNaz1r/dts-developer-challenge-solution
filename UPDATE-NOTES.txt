@@ -1,0 +1,7 @@
+The current project includes the dashboard fixes requested during local testing:
+
+- Selecting My tasks clears the status and text filters and restores all tasks.
+- The workspace three-dot menu offers Show all tasks, Refresh tasks and API documentation.
+- Uvicorn uses its base dependency rather than optional standard extras, avoiding the PyYAML compiler issue on newer Windows Python releases.
+
+Keep your local .venv and tasks.db when updating project files.
