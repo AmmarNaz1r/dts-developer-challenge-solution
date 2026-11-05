@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f6fa" />
+    <meta name="description" content="A simple, organised workspace for caseworker tasks." />
+    <title>Casework tasks</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <script src="/assets/app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Main navigation">
+        <a class="brand" href="/" aria-label="Casework home">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span>casework<span class="brand-dot">.</span></span>
+        </a>
+        <div class="side-section-label">WORKSPACE</div>
+        <nav class="side-nav">
+          <a class="nav-item active" href="#tasks" data-nav-filter="all" aria-current="page"><span class="nav-icon" aria-hidden="true">▦</span> My tasks</a>
+          <a class="nav-item" href="#tasks" data-nav-filter="in_progress"><span class="nav-icon" aria-hidden="true">◷</span> In progress</a>
+          <a class="nav-item" href="#tasks" data-nav-filter="completed"><span class="nav-icon" aria-hidden="true">✓</span> Completed</a>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="help-card">
+            <div class="help-icon" aria-hidden="true">✦</div>
+            <strong>One step at a time.</strong>
+            <p>Keep your work clear, focused and moving forward.</p>
+          </div>
+          <div class="profile-row">
+            <div class="avatar" aria-hidden="true">CW</div>
+            <div><strong>Caseworker</strong><span>My workspace</span></div>
+            <details class="profile-menu">
+              <summary class="profile-more" aria-label="Workspace actions" title="Workspace actions">···</summary>
+              <div class="profile-menu-panel">
+                <button type="button" data-menu-action="all">Show all tasks</button>
+                <button type="button" data-menu-action="refresh">Refresh tasks</button>
+                <a href="/docs" target="_blank" rel="noopener noreferrer">API documentation ↗</a>
+              </div>
+            </details>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content" id="tasks">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>Workspace</span><span class="crumb-separator">/</span><strong id="current-view-label">My tasks</strong></div>
+          <div class="topbar-right"><span class="today-label" id="today-label"></span><span class="online-indicator"><i></i> All changes saved</span></div>
+        </header>
+
+        <section class="page-heading">
+          <div>
+            <div class="eyebrow">YOUR WORKSPACE</div>
+            <h1>Good work starts with <span>clarity.</span></h1>
+            <p class="page-subtitle">Keep track of the details. Focus on what matters next.</p>
+          </div>
+          <button class="primary-button" id="new-task-button" type="button"><span aria-hidden="true">＋</span> New task</button>
+        </section>
+
+        <section class="stats-grid" aria-label="Task summary">
+          <article class="stat-card stat-total"><div class="stat-top"><span class="stat-label">Total tasks</span><span class="stat-icon">▦</span></div><div class="stat-number" id="stat-total">0</div><div class="stat-foot">Across your workspace</div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-label">To do</span><span class="stat-icon icon-amber">○</span></div><div class="stat-number" id="stat-todo">0</div><div class="stat-foot">Ready when you are</div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-label">In progress</span><span class="stat-icon icon-blue">◷</span></div><div class="stat-number" id="stat-progress">0</div><div class="stat-foot">Currently underway</div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-label">Completed</span><span class="stat-icon icon-green">✓</span></div><div class="stat-number" id="stat-completed">0</div><div class="stat-foot">Nice work, keep going</div></article>
+        </section>
+
+        <section class="task-panel" aria-label="Your tasks">
+          <div class="panel-heading">
+            <div><h2>Your tasks</h2><p>Everything you need to stay on top of.</p></div>
+            <div class="task-tools">
+              <label class="search-box"><span aria-hidden="true">⌕</span><span class="sr-only">Search tasks</span><input id="task-search" type="search" placeholder="Search tasks..." /></label>
+              <label class="filter-select-wrap"><span class="sr-only">Filter tasks by status</span><select id="status-filter"><option value="all">All statuses</option><option value="todo">To do</option><option value="in_progress">In progress</option><option value="completed">Completed</option></select></label>
+            </div>
+          </div>
+          <div class="task-table-head"><span>TASK DETAILS</span><span>STATUS</span><span>DUE DATE</span><span class="sr-only">ACTIONS</span></div>
+          <div id="task-list" class="task-list" aria-live="polite"><div class="loading-state">Loading your tasks…</div></div>
+          <div class="panel-footer"><span id="task-count">Showing 0 tasks</span><span>Sorted by due date</span></div>
+        </section>
+        <footer class="page-footer"><span>Casework task manager</span><span>Make space for the work that matters.</span></footer>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="task-modal" hidden>
+      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-heading"><div><div class="eyebrow">TASK DETAILS</div><h2 id="modal-title">Create a task</h2><p>Add the details so nothing gets missed.</p></div><button class="icon-button" id="close-modal-button" type="button" aria-label="Close dialog">×</button></div>
+        <form id="task-form" novalidate>
+          <label class="form-field"><span>Task title <b>*</b></span><input id="task-title" name="title" type="text" maxlength="120" required placeholder="e.g. Review case documents" /><small class="field-error" id="title-error"></small></label>
+          <label class="form-field"><span>Description <em>Optional</em></span><textarea id="task-description" name="description" rows="3" maxlength="2000" placeholder="Add any helpful context or next steps..."></textarea></label>
+          <div class="form-row">
+            <label class="form-field"><span>Due date and time <b>*</b></span><input id="task-due" name="due_at" type="datetime-local" required /><small class="field-error" id="due-error"></small></label>
+            <label class="form-field"><span>Status</span><select id="task-status" name="status"><option value="todo">To do</option><option value="in_progress">In progress</option><option value="completed">Completed</option></select></label>
+          </div>
+          <div class="modal-actions"><button class="secondary-button" id="cancel-modal-button" type="button">Cancel</button><button class="primary-button" id="save-task-button" type="submit">Save task</button></div>
+          <p class="form-feedback" id="form-feedback" role="alert"></p>
+        </form>
+      </section>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
